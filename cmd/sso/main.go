@@ -14,6 +14,11 @@ const (
 	envDev = "dev"
 	envProd = "prod"
 )
+/*
+TODO:
+- Write slogdiscard yourself (you should learn what methods to discard in slogger std library)
+- Wrap your storage and add methods like Stop, Run, etc (like in gRPC)
+*/
 
 func main() {
 	cfg := config.MustLoad()
