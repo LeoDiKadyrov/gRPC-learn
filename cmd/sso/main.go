@@ -18,6 +18,7 @@ const (
 TODO:
 - Write slogdiscard yourself (you should learn what methods to discard in slogger std library)
 - Wrap your storage and add methods like Stop, Run, etc (like in gRPC)
+- Normalization of database, because we write is_admin column for each user (0 - not admin, 1 - admin), and it's better to normalize database
 */
 
 func main() {
