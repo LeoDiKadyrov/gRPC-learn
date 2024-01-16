@@ -2,6 +2,9 @@ package auth
 
 import (
 	"context"
+	"errors"
+	"sso/internal/services/auth"
+	"sso/internal/storage"
 
 	ssoy1 "github.com/LeoDiKadyrov/protos/gen/go/sso"
 	"google.golang.org/grpc"
@@ -31,7 +34,10 @@ func (s *serverAPI) Login(ctx context.Context, req *ssoy1.LoginRequest) (*ssoy1.
 
 	token, err := s.auth.Login(ctx, req.GetEmail(), req.GetPassword(), int(req.GetAppId())); 
 	if err != nil {
-		// TODO:
+		if errors.Is(err, auth.ErrInvalidCredentials) {
+			return nil, status.Error(codes.InvalidArgument, "invalid credentials")
+		}
+		
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 
@@ -47,7 +53,10 @@ func (s *serverAPI) Register(ctx context.Context, req *ssoy1.RegisterRequest) (*
 
 	userID, err := s.auth.RegisterUser(ctx, req.GetEmail(), req.GetPassword())
 	if err != nil {
-		// TODO:
+		if errors.Is(err, storage.ErrUserExists) {
+			return nil, status.Error(codes.AlreadyExists, "user already exists")
+		}
+		
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 
@@ -63,7 +72,10 @@ func (s *serverAPI) IsAdmin(ctx context.Context, req *ssoy1.IsAdminRequest) (*ss
 
 	isAdmin, err := s.auth.IsAdmin(ctx, req.GetUserId())
 	if err != nil {
-		// TODO:
+		if errors.Is(err, auth.ErrInvalidCredentials) {
+			return nil, status.Error(codes.InvalidArgument, "user not found")
+		}
+
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 

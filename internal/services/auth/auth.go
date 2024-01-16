@@ -137,17 +137,17 @@ func (a *Auth) RegisterUser (
 
 func (a *Auth) IsAdmin (
 	ctx context.Context,
-	userID int,
+	userID int64,
 ) (bool, error) {
 	const op = "auth.IsAdmin"
 
 	log := a.log.With(
 		slog.String("op", op),
-		slog.Int("userID", userID),
+		slog.Int64("userID", userID),
 	)
 	log.Info("verifying if user an admin")
 
-	isAdmin, err := a.usrProvider.IsAdmin(ctx, int64(userID))
+	isAdmin, err := a.usrProvider.IsAdmin(ctx, userID)
 	if err != nil {
 		if errors.Is(err, storage.ErrAppNotFound) {
 			log.Warn("app not found", slog.String("error", err.Error()))
