@@ -18,7 +18,7 @@ const (
 
 type Suite struct {
 	*testing.T
-	Cfg *config.Config
+	Cfg        *config.Config
 	AuthClient ssoy1.AuthClient
 }
 
@@ -26,8 +26,7 @@ func New(t *testing.T) (context.Context, *Suite) {
 	t.Helper()
 	t.Parallel()
 
-
-	cfg := config.MustLoadByPath("../config/local_tests.yaml")
+	cfg := config.MustLoadByPath("../config/local.yaml")
 	ctx, cancelCtx := context.WithTimeout(context.Background(), cfg.GRPC.Timeout)
 
 	t.Cleanup(func() {
@@ -43,8 +42,8 @@ func New(t *testing.T) (context.Context, *Suite) {
 	}
 
 	return ctx, &Suite{
-		T: t,
-		Cfg: cfg,
+		T:          t,
+		Cfg:        cfg,
 		AuthClient: ssoy1.NewAuthClient(cc),
 	}
 }
